@@ -14,6 +14,8 @@ plotly = "^5.24.1"
 python-dotenv = "^1.0.1"
 nslookup = "^1.8.1"
 openpyxl = "^3.1.5"
+streamlit = "^1.40.2"
+tqdm = "^4.67.1"
 
 
 [build-system]
