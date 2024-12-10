@@ -2,7 +2,7 @@ import math
 import pandas as pd
 # import ldap_helper as ldap
 from utils.log_helper import LOGGER
-import constants as constants
+import utils.constants as constants
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -14,6 +14,8 @@ import time
 class EmailGenerator:
     def __init__(self, fileName):
         data = pd.read_excel(fileName, sheet_name='Home Drives')
+        self.total_drives = data.shape[0]
+        self.raw = data
         self.data = self.finetune_data(data)
         self.ministry_summary = {
             'HomeDrives': 1901,
@@ -21,9 +23,9 @@ class EmailGenerator:
             'TotalHomeDriveUsage': 8026.09,
 
         }
-        fp = open('../images/EmptyRecycleBin.png', "rb")
-        self.empty_recycle_bin = fp.read()
-        fp.close()
+        # fp = open('../images/EmptyRecycleBin.png', "rb")
+        # self.empty_recycle_bin = fp.read()
+        # fp.close()
 
 
     @staticmethod
@@ -58,7 +60,7 @@ class EmailGenerator:
 
         # Round down to nearest thousand for legibility
         total_gb = int(math.floor(total_gb / 10) * 10)
-        total_h_drive_cost = int(math.floor(total_h_drive_cost / 10) * 10)
+        total_h_drive_cost = int(round((math.floor(total_h_drive_cost / 10) * 10) * 12, -4)/1000)
         h_drive_count = int(math.floor(h_drive_count / 10) * 10)
 
         # Build email content and metadata
@@ -79,20 +81,20 @@ class EmailGenerator:
         </head><body><p>
             Hi {name},<br><br>
 
-            This report from the MOTT Data Storage Reduction Team (DSR)
-             shows the costs of your "home" or (H:) drive <i>as it appeared on {last_month_name} 15th.</i>"""
+            This report from the MOTT Data Storage Reduction Team (DSR) shows the costs of your "home" or H: drive <i>as it appeared on {last_month_name} 15th.</i><br>
+            As of September 13, 2024, we have adopted OneDrive as our personal data storage location. H: drives are no longer used at MOTT for data storage.
+
+"""
 
         # Remind user why storage costs are important as a ministry
-        html_why_data_important = f"""
-        <br>
-            As <a href='https://intranet.gov.bc.ca/assets/intranet/trannet/news/executive/2024_08_27_adm_cousins_data.pdf'>ADM Paula Cousins stated</a> in her email of August 27, 2024, we have adopted OneDrive as our personal data storage location. H: drives are no longer used at MOTT for data storage.</li>
-            There are approx. {h_drive_count:,} H Drives in the Ministry of {ministry_name}, totaling {total_gb:,} GB of data at a cost of ${total_h_drive_cost:,} for {last_month_name} {year}.
+        html_why_data_important = f"""          
+            <p>The continued use of our H: drives costs MOTT approximately ${total_h_drive_cost}K annually, as opposed to OneDrive, which is no cost.</p>
                 """
 
         # Inform user of personal metrics
         html_personal_metrics = f"""<br>
-        <p class='indent' style="font-size: 14pt; font-weight: bold;">Your H drive size in {last_month_name} was {last_month_gb:,} GB, billed to Ministry of {ministry_name} at ${last_month_cost:,.2f}. </p>
-        <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">For your Action: Your data must be moved to OneDrive.</p>
+        <p class='indent' style="font-size: 14pt; font-weight: bold;">Your H: drive size in {last_month_name} was {last_month_gb:,} GB, billed to Ministry of {ministry_name} at ${last_month_cost:,.2f} per month. </p>
+        <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">For your Action: Your data must be moved to OneDrive to avoid future costs.</p>
         """
 
         # Provide solutions to the user to help with H Drive faqs/issues
@@ -136,13 +138,13 @@ class EmailGenerator:
         s = smtplib.SMTP(constants.SMTP_SERVER)
         # s.sendmail(msg["From"], recipient, msg.as_string())
         s.sendmail(msg["From"], recipient, msg.as_string())
+        # Log the email sent
+        LOGGER.info(f"Email sent to {recipient}.")
         s.quit()
 
         # Following smtp server guidelines of max 30 emails/minute
         time.sleep(2)
 
-        # log send complete
-        LOGGER.info(f"Email sent to {recipient}.")
 
     def send_all_emails(self):
         records_to_send = self.data.to_dict(orient='records')
