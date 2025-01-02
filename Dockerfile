@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/streamlit/streamlit-example.git .
+RUN git clone https://github.com/evan-harley/h-drive-email.git .
 
 RUN pip3 install poetry
 
