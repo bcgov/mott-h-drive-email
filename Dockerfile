@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # RUN git clone https://github.com/evan-harley/h-drive-email.git .
-COPY ./pyproject.toml /app/
+COPY . /app/
 
 RUN pip3 install poetry
 

@@ -2,6 +2,8 @@ name: Build & Deploy Image to OpenShift
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   build:

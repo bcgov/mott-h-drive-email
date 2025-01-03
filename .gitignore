@@ -1,1 +1,19 @@
-/.env
+# Ignore virtual environments
+.venv/
+__pycache__/
+
+# Ignore version control files
+.git/
+.gitignore
+
+# Ignore Docker-specific files
+Dockerfile
+docker-compose.yml
+
+# Ignore environment files
+.env
+
+# Ignore build artifacts
+*.pyc
+*.pyo
+*.log
