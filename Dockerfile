@@ -1,5 +1,9 @@
 FROM python:3.13-slim
 
+# Set custom cache and virtualenv paths that are writable
+ENV POETRY_CACHE_DIR=/app/.cache
+ENV POETRY_VIRTUALENVS_PATH=/app/.virtualenvs
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
