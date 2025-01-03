@@ -8,7 +8,7 @@ Before you can run the workflow, ensure you have these variables and secrets con
 - `OPENSHIFT_IMAGESTREAM_USERNAME` secret
     - You can use the Pipeline user
 - `OPENSHIFT_IMAGESTREAM_TOKEN` secret
-    - You can use the Pipeline Token
+    - You can use the Pipeline Token (From pipeline-token-xxxxxxxx)
 
 ## Other Configuration Required
 - Deployment
