@@ -29,11 +29,11 @@ jobs:
       with:
         oc: "4"
 
-#    - name: Push to OpenShift ImageStream
-#      uses: redhat-actions/push-to-registry@v2
-#      with:
-#        image: ${{ steps.build_image.outputs.image }}
-#        tags: latest
-#        registry: ${{ vars.OPENSHIFT_IMAGESTREAM_URL }}
-#        username: ${{ secrets.OPENSHIFT_IMAGESTREAM_USERNAME }}
-#        password: ${{ secrets.OPENSHIFT_IMAGESTREAM_TOKEN }}
+    - name: Push to OpenShift ImageStream
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build_image.outputs.image }}
+        tags: latest
+        registry: ${{ vars.OPENSHIFT_IMAGESTREAM_URL }}
+        username: ${{ secrets.OPENSHIFT_IMAGESTREAM_USERNAME }}
+        password: ${{ secrets.OPENSHIFT_IMAGESTREAM_TOKEN }}
