@@ -6,10 +6,6 @@ __pycache__/
 .git/
 .gitignore
 
-# Ignore Docker-specific files
-Dockerfile
-docker-compose.yml
-
 # Ignore environment files
 .env
 
