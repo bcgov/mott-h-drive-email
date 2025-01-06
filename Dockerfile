@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 # RUN git clone https://github.com/evan-harley/h-drive-email.git .
 COPY . /app/
 
-RUN pip3 install poetry
+RUN pip3 install poetry==1.8.5
 
 RUN poetry install --no-interaction --no-ansi
 
