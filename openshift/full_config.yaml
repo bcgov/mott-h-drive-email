@@ -1,0 +1,143 @@
+# To deploy
+# 1. Replace the two instances of <NAMESPACE> with the namespace you are deploying this too (ie abc123-dev)
+# 2. In OpenShift go to the namespace and click the + in the top bar to add a YAML file. Copy and paste this entire file and click create.
+# 3. Run the Github action to deploy the image to the ImageStream which should automatically cause the app to start.
+
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: h-drive-email
+  labels:
+    app: h-drive-email
+spec:
+  lookupPolicy:
+    local: false
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"h-drive-email:latest","namespace":"<NAMESPACE>"},"fieldPath":"spec.template.spec.containers[?(@.name==\"container\")].image","pause":"false"}]'
+  name: h-drive-email
+  labels:
+    app: h-drive-email
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: h-drive-email
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: h-drive-email
+    spec:
+      containers:
+        - name: container
+          image: 'image-registry.openshift-image-registry.svc:5000/<NAMESPACE>/h-drive-email@latest'
+          ports:
+            - containerPort: 8501
+              protocol: TCP
+          env:
+            - name: POSTGRES_PASSWORD
+              value: database_password
+            - name: LDAP_USER
+              value: AD username
+            - name: EMAIL_SENDLIST
+              value: 'recipient1@gov.bc.ca,recipient2@gov.bc.ca,recipient3@gov.bc.ca'
+            - name: EMAIL_OMITLIST
+              value: 'do-not-send1@gov.bc.ca,do-not-send2@gov.bc.ca'
+            - name: SMTP_SERVER
+              value: apps.smtp.gov.bc.ca
+            - name: POSTGRES_HOST
+              value: localhost
+            - name: DEBUG_IDIR
+              value: jsmith
+            - name: DEBUG_EMAIL
+              value: john.smith@gov.bc.ca
+            - name: POSTGRES_USER
+              value: database_user
+            - name: LDAP_PASSWORD
+              value: AD password
+            - name: GRAPH_FILE_PATH
+              value: /tmp/graph.png
+            - name: GOLD_STAR_FILE_PATH
+              value: gold-star.png
+          resources:
+            requests:
+              cpu: 5m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: h-drive-email
+  labels:
+    app: h-drive-email
+spec:
+  podSelector:
+    matchLabels:
+      app: h-drive-email
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+  policyTypes:
+    - Ingress
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: h-drive-email
+  labels:
+    app: h-drive-email
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8501
+  selector:
+    app: h-drive-email
+
+---
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: h-drive-email
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: 142.34.53.0/24 142.22.0.0/15 142.24.0.0/13 142.32.0.0/13
+  labels:
+    app: h-drive-email
+spec:
+  host: 
+  path: /
+  to:
+    kind: Service
+    name: h-drive-email
+    weight: 100
+  port:
+    targetPort: 8501
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
