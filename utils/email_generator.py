@@ -1,4 +1,5 @@
 import math
+import calendar
 import pandas as pd
 # import ldap_helper as ldap
 from utils.log_helper import LOGGER
@@ -18,11 +19,13 @@ class EmailGenerator:
         self.raw = data
         self.data = self.finetune_data(data)
         self.ministry_summary = {
-            'HomeDrives': 1901,
-            'BaseAllocation': 2851.5,
-            'TotalHomeDriveUsage': 8026.09,
+            'HomeDrives': self.total_drives,
+            'BaseAllocation': self.total_drives * 1.5,
+            'TotalHomeDriveUsage': self.raw['Used (GB)'].sum()
 
         }
+        month_number = int(fileName.split('_')[0].split('-')[1])
+        self.month_name = calendar.month_name[month_number]
         # fp = open('../images/EmptyRecycleBin.png', "rb")
         # self.empty_recycle_bin = fp.read()
         # fp.close()
@@ -51,7 +54,7 @@ class EmailGenerator:
         msg = MIMEMultipart("related")
 
         year = '2024'
-        last_month_name = 'November'
+        last_month_name = self.month_name
 
         total_gb = float(self.ministry_summary['TotalHomeDriveUsage'])
         h_drive_count = float(self.ministry_summary['HomeDrives'])
