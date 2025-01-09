@@ -24,7 +24,7 @@ class EmailGenerator:
             'TotalHomeDriveUsage': self.raw['Used (GB)'].sum()
 
         }
-        month_number = int(fileName.split('_')[0].split('-')[1])
+        month_number = int(fileName.name.split('_')[0].split('-')[1])
         self.month_name = calendar.month_name[month_number]
         # fp = open('../images/EmptyRecycleBin.png', "rb")
         # self.empty_recycle_bin = fp.read()
