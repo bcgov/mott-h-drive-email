@@ -25,6 +25,7 @@ class EmailGenerator:
 
         }
         month_number = int(fileName.name.split('_')[0].split('-')[1])
+        self.year = int(fileName.name.split('_')[0].split('-')[0])
         self.month_name = calendar.month_name[month_number]
         # fp = open('../images/EmptyRecycleBin.png', "rb")
         # self.empty_recycle_bin = fp.read()
@@ -53,7 +54,7 @@ class EmailGenerator:
         last_month_cost = (last_month_gb - 1.5) * 2.7 if last_month_gb > 1.5 else 0.00
         msg = MIMEMultipart("related")
 
-        year = '2024'
+        year = self.year
         last_month_name = self.month_name
 
         total_gb = float(self.ministry_summary['TotalHomeDriveUsage'])
