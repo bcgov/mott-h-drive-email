@@ -1,5 +1,6 @@
 import math
 import calendar
+import openpyxl
 import pandas as pd
 # import ldap_helper as ldap
 from utils.log_helper import LOGGER
@@ -15,7 +16,9 @@ import time
 class EmailGenerator:
     def __init__(self, fileName):
         data = pd.read_excel(fileName, sheet_name='Home Drives')
-        self.total_drives = data.shape[0]
+        wb = openpyxl.load_workbook(fileName)
+        sheet = wb['Summary']
+        self.total_drives = sheet['B4'].value
         self.raw = data
         self.data = self.finetune_data(data)
         self.ministry_summary = {
@@ -34,7 +37,7 @@ class EmailGenerator:
 
     @staticmethod
     def finetune_data(data: pd.DataFrame) -> pd.DataFrame:
-        finetuned = data[data['Used (GB)'] > 1.5]
+        finetuned = data[(data['Used (GB)'] > 1.5) & (~data['Email'].isna())]
 
         return finetuned
 
