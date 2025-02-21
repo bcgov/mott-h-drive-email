@@ -45,7 +45,10 @@ if __name__ == '__main__':
             st.metric('Percent of Drives Above Threshold', percent_over_threshold)
 
 
+        data_to_display = gen.data.sort_values(by=['Used (GB)'], ascending=False).head(10).copy()
+        data_to_display['Cost'] = (data_to_display['Used (GB)'] - 1.5) * 2.7
+        data_to_display['Cost'] = data_to_display['Cost'].apply(lambda x: '{:.2f}'.format(round(x, 2)))
         st.dataframe(
-            gen.data.sort_values(by=['Used (GB)'], ascending=False).head(10)
+            data_to_display[['User ID', 'Department', 'Used (GB)', 'Cost']]
         )
 

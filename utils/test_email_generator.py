@@ -6,13 +6,13 @@ from utils.constants import TEST_RECORD
 class TestEmailGenerator(TestCase):
     def test_initializes_successfully(self):
         try:
-            gen = EmailGenerator('../data/2024-11_SFP TRAN Usage.xlsx')
+            gen = EmailGenerator('../data/2025-02_SFP TRAN Usage.xlsx')
             self.assertTrue(True)
         except Exception as e:
             self.fail(e)
 
     def test_send_idir_email(self):
-        gen = EmailGenerator('../data/2024-11_SFP TRAN Usage.xlsx')
+        gen = EmailGenerator('../data/2025-02_SFP TRAN Usage.xlsx')
         try:
             gen.send_idir_email(TEST_RECORD)
             self.assertTrue(True)
