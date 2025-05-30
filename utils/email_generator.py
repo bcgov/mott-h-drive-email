@@ -37,7 +37,7 @@ class EmailGenerator:
 
     @staticmethod
     def finetune_data(data: pd.DataFrame) -> pd.DataFrame:
-        finetuned = data[(data['Used (GB)'] > 5) & (~data['Email'].isna())]
+        finetuned = data[(data['Used (GB)'] >= 5) & (~data['Email'].isna())]
 
         return finetuned
 
@@ -89,7 +89,7 @@ class EmailGenerator:
             Hi {name},<br><br>
 
             As of September 13, 2024, we have adopted OneDrive as our personal data storage location. H: drives are no longer used at MOTT for data storage.
-
+            <br>
 """
 
         # Remind user why storage costs are important as a ministry
@@ -100,6 +100,7 @@ class EmailGenerator:
         # Inform user of personal metrics
         html_personal_metrics = f"""<br>
         <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">For your Action: Your data must be moved to OneDrive to avoid future costs.</p>
+        <br>
         """
 
         # Provide solutions to the user to help with H Drive faqs/issues
