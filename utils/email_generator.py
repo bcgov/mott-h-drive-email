@@ -37,7 +37,7 @@ class EmailGenerator:
 
     @staticmethod
     def finetune_data(data: pd.DataFrame) -> pd.DataFrame:
-        finetuned = data[(data['Used (GB)'] > 1.5) & (~data['Email'].isna())]
+        finetuned = data[(data['Used (GB)'] > 5) & (~data['Email'].isna())]
 
         return finetuned
 
@@ -88,19 +88,17 @@ class EmailGenerator:
         </head><body><p>
             Hi {name},<br><br>
 
-            This report from the MOTT Data Storage Reduction Team (DSR) shows the costs of your "home" or H: drive <i>as it appeared on {last_month_name} 15th.</i><br>
             As of September 13, 2024, we have adopted OneDrive as our personal data storage location. H: drives are no longer used at MOTT for data storage.
 
 """
 
         # Remind user why storage costs are important as a ministry
         html_why_data_important = f"""          
-            <p>The continued use of our H: drives costs MOTT approximately ${total_h_drive_cost}K annually, as opposed to OneDrive, which is no cost.</p>
+            <p>We are asking for your immediate participation to move your data off of your H drive which will enable us to achieve an additional $80k in annual savings for the ministry.</p>
                 """
 
         # Inform user of personal metrics
         html_personal_metrics = f"""<br>
-        <p class='indent' style="font-size: 14pt; font-weight: bold;">Your H: drive size in {last_month_name} was {last_month_gb:,} GB, billed to Ministry of {ministry_name} at ${last_month_cost:,.2f} per month. </p>
         <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">For your Action: Your data must be moved to OneDrive to avoid future costs.</p>
         """
 
