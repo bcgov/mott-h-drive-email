@@ -37,7 +37,7 @@ class EmailGenerator:
 
     @staticmethod
     def finetune_data(data: pd.DataFrame) -> pd.DataFrame:
-        finetuned = data[(data['Used (GB)'] >= 5) & (~data['Email'].isna())]
+        finetuned = data[(data['Used (GB)'] >= 1) & (~data['Email'].isna())]
 
         return finetuned
 
