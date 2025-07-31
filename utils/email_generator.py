@@ -37,7 +37,7 @@ class EmailGenerator:
 
     @staticmethod
     def finetune_data(data: pd.DataFrame) -> pd.DataFrame:
-        finetuned = data[(data['Used (GB)'] >= 1) & (~data['Email'].isna())]
+        finetuned = data[(data['Used (GB)'] >= 0.1) & (~data['Email'].isna())]
 
         return finetuned
 
@@ -88,25 +88,52 @@ class EmailGenerator:
         </head><body><p>
             Hi {name},<br><br>
 
-            As of September 13, 2024, we have adopted OneDrive as our personal data storage location. H: drives are no longer used at MOTT for data storage.
+            After one year of data reduction our move from HDrive to OneDrive is almost complete. MOTT has a new HDrive policy, effective August 31, 2025
             <br>
 """
 
-        # Remind user why storage costs are important as a ministry
-        html_why_data_important = f"""          
-            <p>We are asking for your immediate participation to move your data off of your H drive which will enable us to achieve an additional $80k in annual savings for the ministry.</p>
-                """
-
         # Inform user of personal metrics
         html_personal_metrics = f"""<br>
-        <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">For your Action: Your data must be moved to OneDrive to avoid future costs.</p>
+        <p class='indent' style="font-size: 14pt; font-weight: bold; color: red;">
+        HDrives must not be used to store data. All HDrives must be empty by August 31st in preparation for the impending retirement of HDrives.
+        </p>
         <br>
+
+        Your HDrive currently stores {last_month_gb}GB of data.
         """
 
         # Provide solutions to the user to help with H Drive faqs/issues
         html_why_important = """
-        <p>Follow these steps on  <a href='https://intranet.gov.bc.ca/trannet/initiatives/data-storage-reduction#phase1'>TRANnet</a>; please <a href='mailto:datastoragereduction@gov.bc.ca'>connect with the DSR team </a> if you need further assistance</p>
-        <br>
+        <p>If you are receiving this message you need to delete data from your HDrive. No one can delete data from your HDrive except you. </p>
+        <p>See the <a href="https://intranet.gov.bc.ca/trannet/initiatives/data-storage-reduction">TRANnet</a> page on data storage reduction and follow directions under Phase 1 – Adopt OneDrive and How to Move Files from H:Drive to OneDrive.</p>
+
+<p>Two very common reasons for data in your HDrive (when you thought it was empty) are:</p>
+
+<ol>
+    <li>Items on your desktop
+        <ol type="a">
+            <li>If you store items on your desktop you must go to desktop properties and change the location of backups from H to OneDrive.
+                <ol type="i">
+                    <li>use File Explorer to find your desktop under This PC</li>
+                    <li>use the right mouse click on Desktop, scroll to the bottom and choose Properties</li>
+                    <li>Desktop Properties will open with 5 tabs – choose Location</li>
+                    <li>in this tab you will choose Move… which will allow you to navigate to choose your OneDrive as the new location for desktop backup</li>
+                    <li>click Apply and ensure you say ‘yes’ when asked if you want to delete the files from previous backup location</li>
+                </ol>
+            </li>
+            <li>This will complete the change of backup location. All the items on your desktop should remain unchanged.</li>
+            <li>Your desktop and the ‘desktop’ icon in OneDrive will synchronize. The OneDrive desktop will be an identical copy of items on your desktop.</li>
+        </ol>
+    </li>
+    <br>
+    <li>The recycle bin is full!
+        <ol type="a">
+            <li>Many folks will hit ‘delete’ on a file or folder (which puts the file in the recycle bin) and think they are done.</li>
+            <li>You need to empty the recycle bin! Please empty the recycle bin once Weekly</li>
+            <li>If the recycle bin is not emptied the data will stay in your HDrive and MOTT will continue to pay for that storage.</li>
+        </ol>
+    </li>
+</ol>
             """  # noqa
 
 
@@ -130,7 +157,6 @@ class EmailGenerator:
 
         html = (
                 html_intro
-                + html_why_data_important
                 + html_personal_metrics
                 + html_why_important
                 + html_footer

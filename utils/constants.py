@@ -56,5 +56,5 @@ TEST_RECORD =  {
     'Department': 'Strategic & Corporate Priorities Division',
     'Office': 'Information Management Branch',
     'Email': 'Adon.Pomponio@gov.bc.ca',
-    'Used (GB)': 0.01
+    'Used (GB)': 1000
         }

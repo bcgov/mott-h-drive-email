@@ -30,7 +30,7 @@ if __name__ == '__main__':
         total_gb = round(gen.raw['Used (GB)'].sum())
         total_cost = round((total_gb - (total_drives * 1.5)) * 2.7, 2)
         average_gb = round(gen.raw['Used (GB)'].mean())
-        count_over_threshold = gen.raw[gen.raw['Used (GB)'] > 1.0].shape[0]
+        count_over_threshold = gen.raw[gen.raw['Used (GB)'] > 0.1].shape[0]
         percent_over_threshold = round(float(count_over_threshold) / float(total_drives), 4) * 100
         with col1:
             st.metric('Total GB', total_gb, total_gb - allowed_gb, delta_color='inverse')
