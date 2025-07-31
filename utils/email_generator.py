@@ -104,7 +104,7 @@ class EmailGenerator:
 
         # Provide solutions to the user to help with H Drive faqs/issues
         html_why_important = """
-        <p>If you are receiving this message you need to delete data from your HDrive. No one can delete data from your HDrive except you. </p>
+        <p>If you are receiving this message you need to move any needed files to your OneDrive and delete the data from your HDrive. No one can delete data from your Hdrive except you.</p>
         <p>See the <a href="https://intranet.gov.bc.ca/trannet/initiatives/data-storage-reduction">TRANnet</a> page on data storage reduction and follow directions under Phase 1 – Adopt OneDrive and How to Move Files from H:Drive to OneDrive.</p>
 
 <p>Two very common reasons for data in your HDrive (when you thought it was empty) are:</p>
